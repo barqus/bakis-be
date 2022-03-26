@@ -29,16 +29,15 @@ async function login(user) {
   const passwordsMatch = bcrypt.compareSync(user.password, data[0].hashed_password); // false
   
   if (passwordsMatch) {
-    const token = generateAccessToken({ user_id: data[0].id });
+    const token = generateAccessToken({ user_id: data[0].id,  role: data[0].role });
     return { token };
   } else {
     throw(Error('Error: wrong password!'));
   }
 }
 
-function generateAccessToken(user_id) {
-  console.log("user_id", user_id)
-  return jwt.sign(user_id, config.token_secret, { expiresIn: '1800s' });
+function generateAccessToken(userContext) {
+  return jwt.sign(userContext, config.token_secret, { expiresIn: '1800s' });
 }
 
 module.exports = {

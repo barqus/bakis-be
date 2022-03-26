@@ -9,7 +9,8 @@ const config = {
     database: env.DB_NAME || 'postgres',
   },
   listPerPage: env.LIST_PER_PAGE || 10,
-  token_secret: env.TOKEN_SECRET || "secr3t@s"
+  token_secret: env.TOKEN_SECRET || "secr3t@s",
+  riot_key: env.RIOT_KEY || "undefined"
 };
 
 module.exports = config;

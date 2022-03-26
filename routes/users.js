@@ -1,22 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const users = require('../services/users');
-const config = require('../config');
-const jwt = require('jsonwebtoken');
+const jwtService = require("../services/jwt");
 
 /* GET quotes listing. */
-router.get('/', async function (req, res, next) {
-
-  const { authorization } = req.headers;
-  console.log(req.headers)
-  if (!authorization) {
-    return res.sendStatus(403);
-  }
-  const token = authorization.split(" ")[1];
-
+router.get('/', jwtService.authenticateToken, async function (req, res, next) {
+  const { user_id } = req.user;
+  console.log(user_id)
   try {
-    const data = jwt.verify(token, config.token_secret);
-    res.json(await users.getUserByID(data.user_id));
+    res.json(await users.getUserByID(user_id));
   } catch (err) {
     return res.sendStatus(403);
   }

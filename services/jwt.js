@@ -1,19 +1,52 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-    if (token == null) return res.sendStatus(401)
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, config.token_secret, (err, user) => {
-        console.log(err)
-        if (err) return res.sendStatus(403).json();
-        req.user = user
-        next()
-    })
-}
+        jwt.verify(token, config.token_secret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+            }
+
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+const authenticateAdminToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, config.token_secret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+            }
+            
+            req.user = user
+
+            const { role } = user;
+
+            if (role !== 'admin') {
+                return res.sendStatus(403);
+            }
+            
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
 module.exports = {
-    authenticateToken
+    authenticateToken,
+    authenticateAdminToken
 }

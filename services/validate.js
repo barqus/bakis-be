@@ -66,9 +66,15 @@ const userSchema = {
     },
 };
 
+const participantsSchema = {
+    type: "object",
+    required: ["name", "lastname", "surname", "nickname", "summoner_name", "twitch_channel", ],
+}
+
 module.exports = {
     tournamentSchema,
     userSchema,
+    participantsSchema,
     validate,
     validationErrorMiddleware
 }
