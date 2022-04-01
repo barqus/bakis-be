@@ -22,6 +22,14 @@ router.get('/:id', async function (req, res, next) {
     }
 });
 
+router.get('/:id/qna', async function (req, res, next) {
+    try {
+        res.json(await participants.getQnA(req.params.id));
+    } catch (err) {
+        const httpError = createHttpError(500, err);
+        next(httpError);
+    }
+});
 
 router.post('/', jwtService.authenticateAdminToken, validator.validate({ body: validator.participantsSchema }),
     async function (req, res, next) {

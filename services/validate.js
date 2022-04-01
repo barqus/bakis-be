@@ -68,7 +68,7 @@ const userSchema = {
 
 const participantsSchema = {
     type: "object",
-    required: ["name", "lastname", "surname", "nickname", "summoner_name", "twitch_channel", ],
+    required: ["name", "surname", "nickname", "summoner_name", "twitch_channel", ],
 }
 
 module.exports = {

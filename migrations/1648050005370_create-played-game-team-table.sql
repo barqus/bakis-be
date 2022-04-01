@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS played_games_team (
     dragons_killed INT NOT NULL,
     rift_heralds_killed INT NOT NULL,
     win BOOLEAN,
-    game_id VARCHAR(100),
+    game_id VARCHAR,
     CONSTRAINT fk_played_games FOREIGN KEY(game_id) REFERENCES played_games(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 -- Down Migration

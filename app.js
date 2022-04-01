@@ -8,10 +8,11 @@ var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var participantsRouter = require('./routes/participants');
 var settingsRouter = require('./routes/settings');
+var leagueRouter = require('./routes/league');
+var questionsRouter = require('./routes/questions');
+var answersRouter = require('./routes/answers');
 var errorHandlerMiddleware = require("./services/error-handler.js");
 var sync = require('./services/sync')
-
-
 
 var app = express();
 
@@ -27,8 +28,13 @@ app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/participants', participantsRouter);
 app.use('/settings', settingsRouter);
+app.use('/league', leagueRouter);
+app.use('/questions', questionsRouter);
+app.use('/answers', answersRouter);
 app.use(errorHandlerMiddleware);
 
 sync.syncParticipantsLeagueStandingsInformation();
-sync.syncMatchHistory()
+sync.syncMatchHistory();
+sync.syncTwitchInformation();
+
 module.exports = app;

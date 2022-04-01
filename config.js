@@ -1,7 +1,7 @@
 const env = process.env;
 
 const config = {
-  db: { /* do not put password or any sensitive info here, done only for demo */
+  db: {
     host: env.DB_HOST || 'localhost',
     port: env.DB_PORT || '5432',
     user: env.DB_USER || 'postgres',
@@ -10,7 +10,9 @@ const config = {
   },
   listPerPage: env.LIST_PER_PAGE || 10,
   token_secret: env.TOKEN_SECRET || "secr3t@s",
-  riot_key: env.RIOT_KEY || "undefined"
+  riot_key: env.RIOT_KEY || "undefined",
+  twitch_client_id: env.TWITCH_CLIENT_ID || "undefined",
+  twitch_secret: env.TWITCH_SECRET || "undefined"
 };
 
 module.exports = config;

@@ -3,7 +3,6 @@ const config = require('../config');
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
-
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
@@ -13,6 +12,7 @@ const authenticateToken = (req, res, next) => {
             }
 
             req.user = user;
+
             next();
         });
     } else {

@@ -34,11 +34,11 @@ async function getByID(playerID) {
 async function create(player) {
     const result = await db.query(
         'INSERT INTO played_team_player (summoner_id, summoner_name, kills, assists, deaths, gold_earned,' +
-        'individual_position,lane, champ_level, champ_id, champ_name, total_damage_dealt, win, team_ID) ' +
-        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
+        'individual_position,lane, champ_level, champ_id, champ_name, total_damage_dealt, win, team_ID, is_participant) ' +
+        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *',
         [player.summonerId, player.summonerName, player.kills, player.assists, player.deaths, player.goldEarned,
         player.individualPosition, player.lane, player.champLevel, player.champID, player.champName,
-        player.totalDamageDealt, player.win, player.teamID]
+        player.totalDamageDealt, player.win, player.teamID, player.isParticipant]
     );
     let message = 'Error in creating player';
 

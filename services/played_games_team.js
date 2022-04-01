@@ -19,14 +19,12 @@ async function getAll() {
 }
 
 async function getByGameID(gameID) {
-    console.log("GAMEID", gameID)
     const rows = await db.query(
         'SELECT id, win FROM played_games_team WHERE game_id=$1', [gameID],
     );
     const playedTeam = helper.emptyOrRows(rows);
 
     if (playedTeam.length <= 0) {
-        console.log("EERER", gameID, rows)
         throw "Played team not found"
     }
     return playedTeam

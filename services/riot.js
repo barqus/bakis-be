@@ -40,30 +40,10 @@ const updateParticipantsLeague = async (participants) => {
     }
 }
 
-const test = async () => {
-    const s = await settings.get();
-    const seconds = new Date(s.start_date) / 1000;
-    console.log(seconds)
-
-    // TODO: Start date and after update by last time updated
-    let matchHistory = await rAPI.matchV5.getIdsbyPuuid({
-        cluster: "europe",
-        puuid: "vIKJHI4OihKYP2LVylIORWtwtbeCh0k8WYGfbKzt2cUkadzGiES5TpQwKQDYduY-kxwQ_XVTwWcstQ",
-        params: {
-            type: "ranked",
-            count: 100,
-            startTime: seconds
-        }
-    }).catch((err) => { console.log(err) })
-    console.log(matchHistory)
-}
-
-
 async function updateMatchHistory(participants, startDate) {
     date = new Date(startDate)
     date.setHours(date.getHours() - 1);
     const startDateInSeconds = Math.floor(new Date(date) / 1000);
-    console.log(date)
 
     for (const element of participants) {
         try {
@@ -76,8 +56,8 @@ async function updateMatchHistory(participants, startDate) {
                     startTime: startDateInSeconds
                 }
             }).catch((err) => { console.log(err) })
-            console.log(matchHistory)
-            matchHistory.forEach(async e => {
+
+            for (const e of matchHistory) {
                 const singleMatchInfo = await rAPI.matchV5.getMatchById({
                     cluster: "europe",
                     matchId: e,
@@ -94,7 +74,7 @@ async function updateMatchHistory(participants, startDate) {
 
                 if (!matchExists) {
                     await played_game.create(matchObject)
-                    singleMatchInfo.info.teams.forEach(async team => {
+                    for (const team of singleMatchInfo.info.teams) {
                         let teamObject = {
                             baronsKilled: team.objectives.baron.kills,
                             championsKilled: team.objectives.champion.kills,
@@ -106,10 +86,11 @@ async function updateMatchHistory(participants, startDate) {
                             win: team.win
                         }
                         await played_team.create(teamObject)
-                    })
-                    let playedTeams = await played_team.getByGameID(singleMatchInfo.metadata.matchId).catch((err) => {console.log(err)})
-                    console.log(playedTeams)
-                    singleMatchInfo.info.participants.forEach(async participant => {
+                    }
+
+                    let playedTeams = await played_team.getByGameID(singleMatchInfo.metadata.matchId).catch((err) => { console.log("errorra", err) })
+
+                    for (const participant of singleMatchInfo.info.participants) {
                         var player = {
                             summonerId: participant.summonerId,
                             summonerName: participant.summonerName,
@@ -124,21 +105,21 @@ async function updateMatchHistory(participants, startDate) {
                             champName: participant.championName,
                             totalDamageDealt: participant.totalDamageDealt,
                             win: participant.win,
-                            teamID: null
+                            teamID: null,
+                            isParticipant: false,
                         };
                         if (participant.win) {
                             player.teamID = (playedTeams.find(element => element.win == true)).id;
                         } else {
-                            player.teamID = (playedTeams.find(element => element.win == true)).id;
+                            player.teamID = (playedTeams.find(element => element.win == false)).id;
                         }
-
-                        const output = await played_team_player.create(player).catch((err) => { console.log(err)})
-                        console.log(output)
-                    });
+                        if (participants.some(e => e.summoner_id === player.summonerId)) {
+                            player.isParticipant = true;
+                        }
+                        await played_team_player.create(player).catch((err) => { console.log(err) })
+                    }
                 }
-
-
-            });
+            }
         } catch (error) {
             continue
         }
