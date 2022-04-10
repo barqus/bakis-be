@@ -25,6 +25,17 @@ router.post('/login',
   }
 );
 
+router.get('/confirm/:activation_code',
+  async function (req, res, next) {
+    try {
+      res.json(await users.activate(req.params.activation_code,req));
+    } catch (err) {
+      const httpError = createHttpError(500, err);
+      next(httpError);
+    }
+  }
+);
+
 router.use(validator.validationErrorMiddleware);
 
 module.exports = router;

@@ -11,6 +11,7 @@ var settingsRouter = require('./routes/settings');
 var leagueRouter = require('./routes/league');
 var questionsRouter = require('./routes/questions');
 var answersRouter = require('./routes/answers');
+var pickemsRouter = require('./routes/pickems');
 var errorHandlerMiddleware = require("./services/error-handler.js");
 var sync = require('./services/sync')
 
@@ -31,6 +32,7 @@ app.use('/settings', settingsRouter);
 app.use('/league', leagueRouter);
 app.use('/questions', questionsRouter);
 app.use('/answers', answersRouter);
+app.use('/pickems', pickemsRouter);
 app.use(errorHandlerMiddleware);
 
 sync.syncParticipantsLeagueStandingsInformation();
