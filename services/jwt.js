@@ -20,6 +20,31 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
+const authenticateTokenForCurrentUser = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwt.verify(token, config.token_secret, (err, user) => {
+            if (err) {
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+            }
+            
+            req.user = user
+
+            const { user_id } = user;
+            if (user_id != req.params.user_id) {
+                return res.sendStatus(403);
+            }
+            
+
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
 const authenticateAdminToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -48,5 +73,6 @@ const authenticateAdminToken = (req, res, next) => {
 
 module.exports = {
     authenticateToken,
-    authenticateAdminToken
+    authenticateAdminToken,
+    authenticateTokenForCurrentUser,
 }
