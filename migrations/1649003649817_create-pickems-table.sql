@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS pickems
     UNIQUE (user_id, position),
     CONSTRAINT fk_participant
         FOREIGN KEY(participant_id)
-            REFERENCES participants(id),
+            REFERENCES participants(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_user
         FOREIGN KEY(user_id)
-            REFERENCES users(id)
+            REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 -- Down Migration
 DROP TABLE IF EXISTS pickems;

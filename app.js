@@ -35,8 +35,8 @@ app.use('/answers', answersRouter);
 app.use('/pickems', pickemsRouter);
 app.use(errorHandlerMiddleware);
 
-sync.syncParticipantsLeagueStandingsInformation();
-sync.syncMatchHistory();
-sync.syncTwitchInformation();
+// sync.syncParticipantsLeagueStandingsInformation();
+// sync.syncMatchHistory();
+// sync.syncTwitchInformation();
 
 module.exports = app;

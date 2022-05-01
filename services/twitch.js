@@ -5,7 +5,6 @@ const authProvider = new ClientCredentialsAuthProvider(config.twitch_client_id, 
 const apiClient = new ApiClient({ authProvider });
 const stream = require('./stream');
 
-// TODO: ADD SAFEGUARD FOR EXISTING TWITCH CHANNEL CHECK
 const updateTwitchInformation = async (participants) => {
     participants.forEach(async element => {
         const twitchChannel = await getTwitchInfoByChannelName(element.twitch_channel)

@@ -16,7 +16,33 @@ async function getUserByID(userID) {
   }
 }
 
+async function updateRole(body, id) {
+  const rows = await db.query(
+    'UPDATE users SET role=$1 WHERE id=$2 RETURNING *',
+    [body.role, id],
+  );
+
+  const updatedUser = helper.emptyOrRows(rows);
+
+  if (updatedUser.length <= 0) {
+      throw "User not found"
+  }
+  return updatedUser
+}
+
+async function getAll() {
+
+  const rows = await db.query(
+    'SELECT id, username, email, activated, role FROM users;',
+  );
+  const data = helper.emptyOrRows(rows);
+
+  return data
+}
+
 
 module.exports = {
-  getUserByID
+  getUserByID,
+  getAll,
+  updateRole
 }

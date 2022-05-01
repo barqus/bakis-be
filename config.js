@@ -13,7 +13,10 @@ const config = {
   riot_key: env.RIOT_KEY || "undefined",
   twitch_client_id: env.TWITCH_CLIENT_ID || "undefined",
   twitch_secret: env.TWITCH_SECRET || "undefined",
-  host: env.HOSTNAME || "http://localhost:9000"
+  twitch_redirect: env.TWITCH_REDIRECT || "http://localhost:3000/twitchRedirect",
+  grant_type: env.GRANT_TYPE || "authorization_code",
+  host: env.HOSTNAME || "http://localhost:9000",
+  fe_host: env.HOSTNAME || "http://localhost:3000"
 };
 
 module.exports = config;
