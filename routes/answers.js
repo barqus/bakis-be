@@ -13,12 +13,28 @@ router.get('/', async function (req, res, next) {
     }
 });
 
+router.get('/:participant_id', async function (req, res, next) {
+    try {
+        res.json(await answers.getByParticipantID(req.params.participant_id));
+    } catch (err) {
+        const httpError = createHttpError(500, err);
+        next(httpError);
+    }
+});
+
 
 router.post('/', jwtService.authenticateAdminToken,
     async function (req, res, next) {
         try {
             for (const element of req.body) {
-                await answers.create(element);
+                let alreadyExists = await answers.checkIfAnswerExistsByQuestionAndParticipant(element.question_id, element.participant_id)
+                if (alreadyExists.length > 0) {
+                    let answerID = alreadyExists[0].id
+                    await answers.update(element, answerID)
+                } else {
+                    await answers.create(element);
+                }
+                
             }
             res.status(201).json();
         } catch (err) {

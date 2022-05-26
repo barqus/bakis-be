@@ -8,7 +8,7 @@ const authenticateToken = (req, res, next) => {
 
         jwt.verify(token, config.token_secret, (err, user) => {
             if (err) {
-                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});
             }
 
             req.user = user;
@@ -22,12 +22,13 @@ const authenticateToken = (req, res, next) => {
 
 const authenticateTokenForCurrentUser = (req, res, next) => {
     const authHeader = req.headers.authorization;
+
     if (authHeader) {
         const token = authHeader.split(' ')[1];
 
         jwt.verify(token, config.token_secret, (err, user) => {
             if (err) {
-                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});
             }
             
             req.user = user
@@ -53,7 +54,7 @@ const authenticateAdminToken = (req, res, next) => {
 
         jwt.verify(token, config.token_secret, (err, user) => {
             if (err) {
-                return res.sendStatus(403).json({message: "Token has expired, please re-log"});;
+                return res.sendStatus(403).json({message: "Token has expired, please re-log"});
             }
             
             req.user = user

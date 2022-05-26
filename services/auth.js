@@ -1,6 +1,8 @@
 const db = require('./db');
 const helper = require('../helper');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
+const { scryptSync, randomBytes } = require("crypto");
+var bcrypt = require('bcryptjs');
 const saltRounds = 10;
 const config = require('../config');
 const jwt = require('jsonwebtoken');

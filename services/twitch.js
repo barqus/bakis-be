@@ -7,13 +7,13 @@ const stream = require('./stream');
 
 const updateTwitchInformation = async (participants) => {
     participants.forEach(async element => {
-        const twitchChannel = await getTwitchInfoByChannelName(element.twitch_channel)
+        const twitchChannel = await getTwitchInfoByID(element.twitch_id)
         if (twitchChannel !== false) {
             let streamInformation = await twitchChannel.getStream()
             if (streamInformation == null) {
-                channelExists = await stream.checkIfStreamExistsByParticipant(element.id)
+                channelExists = await stream.checkIfStreamExistsByID(element.twitch_id)
                 if (channelExists) {
-                    await stream.updateStreamIsLiveByChannelName(false, twitchChannel.displayName)
+                    await stream.updateStreamIsLiveByID(false, twitchChannel.id)
                     // await stream.update(streamInformationObject, st+reamInformationObject.twitch_id)
                 } else {
                     let streamInformationObject = {
@@ -26,7 +26,7 @@ const updateTwitchInformation = async (participants) => {
                 }
             } else {
                 let streamInformationObject = {
-                    twitch_id: streamInformation.id,
+                    twitch_id: streamInformation.userId,
                     display_name: streamInformation.userDisplayName,
                     game_name: streamInformation.gameName,
                     is_live: true,
@@ -36,8 +36,7 @@ const updateTwitchInformation = async (participants) => {
                     thumbnail_url: streamInformation.thumbnailUrl,
                     participant_id: element.id
                 }
-
-                channelExists = await stream.checkIfStreamExistsByChannelName(streamInformation.userDisplayName)
+                channelExists = await stream.checkIfStreamExistsByID(streamInformation.userId)
                 if (channelExists) {
                     await stream.update(streamInformationObject, streamInformationObject.twitch_id)
                 } else {
@@ -57,8 +56,19 @@ async function getTwitchInfoByChannelName(userName) {
     return user
 } 
 
+async function getTwitchInfoByID(id) {
+    const user = await apiClient.helix.users.getUserById(id).catch((err) => { console.log("ERRRR", err) });
+
+    if (!user) {
+        return false;
+    }
+
+    return user
+} 
+
 async function checkIfChannelExists(userName) {
     const user = await apiClient.helix.users.getUserByName(userName).catch((err) => { console.log("ERRRR", err) });
+
     if (!user) {
         return false;
     }
@@ -68,4 +78,6 @@ async function checkIfChannelExists(userName) {
 module.exports = {
     updateTwitchInformation,
     checkIfChannelExists,
+    getTwitchInfoByChannelName,
+    getTwitchInfoByID
 }

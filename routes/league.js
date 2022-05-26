@@ -21,7 +21,16 @@ router.get('/history', async function (req, res, next) {
         const httpError = createHttpError(500, err);
         next(httpError);
     }
-});-
+});
+
+router.get('/history/stats/:id', async function (req, res, next) {
+    try {
+        res.json(await league.getMatchHistoryFromBlob(req.params.id));
+    } catch (err) {
+        const httpError = createHttpError(500, err);
+        next(httpError);
+    }
+});
 
 router.use(validator.validationErrorMiddleware);
 

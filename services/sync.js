@@ -5,7 +5,7 @@ const settings = require('./settings');
 const twitch = require('./twitch')
 
 const syncParticipantsLeagueStandingsInformation = () => {
-    cron.schedule('*/3 * * * *', async () => {
+    cron.schedule('*/1 * * * *', async () => {
         console.log('Syncing participants league information ', new Date());
         const allParticipants = await participants.getAll();
         riot.updateParticipantsLeague(allParticipants.participants)
@@ -25,7 +25,7 @@ const syncMatchHistory = () => {
 }
 
 const syncTwitchInformation = () => {
-    cron.schedule('*/2 * * * *', async () => {
+    cron.schedule('*/1 * * * *', async () => {
         console.log('Syncing twitch information ', new Date());
         const allParticipants = await participants.getAll();
 

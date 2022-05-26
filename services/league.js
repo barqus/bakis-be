@@ -1,9 +1,12 @@
 const db = require('./db');
 const helper = require('../helper');
+const https = require('https');
+const axios = require('axios');
+
 
 async function getStandings() {
     const rows = await db.query(
-        'SELECT * FROM participants, summoners, stream WHERE participants.summoner_id = summoners.id and participants.id = stream.participant_id;',
+        'SELECT * FROM participants, summoners, stream WHERE participants.summoner_id = summoners.id and participants.twitch_id = stream.id;',
     );
     const standings = helper.emptyOrRows(rows);
 
@@ -47,7 +50,20 @@ async function getMatchHistory() {
     return output
 }
 
+async function getMatchHistoryFromBlob(matchInformationId) {
+
+    return axios.get(`https://bakis.blob.core.windows.net/fillqblobas/${matchInformationId}.json`)
+    .then(response => {
+        return response.data
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+
 module.exports = {
     getStandings,
     getMatchHistory,
+    getMatchHistoryFromBlob,
 }

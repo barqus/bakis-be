@@ -32,7 +32,7 @@ describe('Question Endpoints', () => {
 
   it('Put /question/id should update', async () => {
     const res = await requestWithSupertest.put('/questions/'+itemToUse).send({question: 'test2'}).set('Authorization','Bearer '+ token);
-    console.log(res)
+
     expect(res.status).toEqual(201);
   });
 

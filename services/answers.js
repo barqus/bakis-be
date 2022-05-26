@@ -5,10 +5,25 @@ async function getAll() {
     const rows = await db.query(
         'SELECT * FROM answers;',
     );
-    const questions = helper.emptyOrRows(rows);
+    const answers = helper.emptyOrRows(rows);
 
-    return questions
+    return answers
 }
+
+async function getByParticipantID(id) {
+    const rows = await db.query(
+        'SELECT answer FROM answers WHERE participant_id = $1 order by question_id;',[id]
+    );
+    const answers = helper.emptyOrRows(rows);
+    
+    answersToReturn = []
+    rows.forEach(element => {
+        answersToReturn.push(element.answer)
+    });
+
+    return answersToReturn
+}
+
 
 async function create(answer) {
     const result = await db.query(
@@ -22,6 +37,16 @@ async function create(answer) {
     }
 
     return { message, result };
+}
+
+async function checkIfAnswerExistsByQuestionAndParticipant(question_id, participant_id) {
+    const rows = await db.query(
+        'select * from answers where question_id=$1 and participant_id=$2',
+        [question_id, participant_id],
+    );
+    const answers = helper.emptyOrRows(rows);
+
+    return answers
 }
 
 async function update(answer, answerID) {
@@ -54,5 +79,7 @@ module.exports = {
     getAll,
     deleteByID,
     create,
-    update
+    update,
+    getByParticipantID,
+    checkIfAnswerExistsByQuestionAndParticipant
 }

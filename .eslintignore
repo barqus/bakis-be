@@ -1,0 +1,5 @@
+migrations/
+node_modules/
+bin/
+coverage/
+__tests__/

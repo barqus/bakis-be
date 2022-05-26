@@ -11,7 +11,8 @@ async function checkIfSummonerExistsByID(summonerID) {
 
 async function add(summoner) {
     let result = []
-    if (summoner.miniSeries) {
+    console.log(summoner)
+    if (summoner.miniSeries != undefined || summoner.miniSeries) {
         result = await db.query(
             'INSERT INTO summoners (summoner_name, tier, rank, league_points, wins, losses, mini_series, ms_target, ms_wins, ms_losses, ms_progress, id)' +
             ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
@@ -37,7 +38,7 @@ async function add(summoner) {
 
 async function update(summoner) {
     let result = []
-    if (summoner.miniSeries) {
+    if (summoner.miniSeries != undefined || summoner.miniSeries) {
         result = await db.query(
             'UPDATE summoners SET summoner_name=$1, tier=$2, rank=$3, league_points=$4, wins=$5, losses=$6,' +
             ' mini_series=$7, ms_target=$8, ms_wins=$9, ms_losses=$10, ms_progress=$11 WHERE id=$12 RETURNING *',

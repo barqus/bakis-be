@@ -56,11 +56,11 @@ describe('participants Endpoints', () => {
     expect(res.status).toEqual(401);
   });
 
-  // it('Put /participant/id should update', async () => {
-  //   const res = await requestWithSupertest.put('/participants/'+itemToUse).send({participant: 'test2'}).set('Authorization','Bearer '+ token);
-  //   console.log(res)
-  //   expect(res.status).toEqual(201);
-  // });
+  it('Put /participant/id should update', async () => {
+    const res = await requestWithSupertest.put('/participants/'+itemToUse).send({participant: 'test2'}).set('Authorization','Bearer '+ token);
+    console.log(res)
+    expect(res.status).toEqual(201);
+  });
 
   it('Put by ID /participant with wrong id shouldnt update', async () => {
 

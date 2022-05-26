@@ -3,7 +3,7 @@ const helper = require('../helper');
 
 async function getAll() {
     const rows = await db.query(
-        'SELECT * FROM questions;',
+        'SELECT * FROM questions ORDER BY id;',
     );
     const questions = helper.emptyOrRows(rows);
 

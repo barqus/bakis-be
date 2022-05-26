@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS participants(
     summoner_id VARCHAR UNIQUE,
     riot_puuid VARCHAR UNIQUE,
     riot_account_id VARCHAR UNIQUE,
+    twitch_id VARCHAR NOT NULL UNIQUE,
     twitch_channel VARCHAR NOT NULL UNIQUE,
     instagram VARCHAR,
     twitter VARCHAR,

@@ -16,7 +16,8 @@ const config = {
   twitch_redirect: env.TWITCH_REDIRECT || "http://localhost:3000/twitchRedirect",
   grant_type: env.GRANT_TYPE || "authorization_code",
   host: env.HOSTNAME || "http://localhost:9000",
-  fe_host: env.HOSTNAME || "http://localhost:3000"
+  fe_host: env.HOSTNAME || "http://localhost:3000",
+  blob_string: env.BLOB_STRING || ""
 };
 
 module.exports = config;

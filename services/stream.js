@@ -9,9 +9,10 @@ async function checkIfStreamExistsByChannelName(channelName) {
     return rows[0].exists
 }
 
-async function checkIfStreamExistsByParticipant(participantID) {
+async function checkIfStreamExistsByID(id) {
+
     const rows = await db.query(
-        'SELECT EXISTS(SELECT 1 FROM stream where participant_id=$1)', [participantID],
+        'SELECT EXISTS(SELECT 1 FROM stream where id=$1)', [id],
     );
 
     return rows[0].exists
@@ -19,14 +20,18 @@ async function checkIfStreamExistsByParticipant(participantID) {
 
 
 async function create(streamInformation) {
+    if (streamInformation.isArray) {
+        streamInformation = streamInformation[0]
+    }
 
     const result = await db.query(
-        'INSERT INTO stream (twitch_id, display_name, game_name, is_live, title, started_at, ' +
-        'viewers, thumbnail, participant_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
+        'INSERT INTO stream (id, display_name, game_name, is_live, title, started_at, ' +
+        'viewers, thumbnail) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
         [streamInformation.twitch_id, streamInformation.display_name, streamInformation.game_name,
         streamInformation.is_live, streamInformation.title, streamInformation.started_at, streamInformation.viewers,
-        streamInformation.thumbnail_url, streamInformation.participant_id]
+        streamInformation.thumbnail_url]
     );
+
     let message = 'Error in creating stream';
 
     if (result.length) {
@@ -37,8 +42,11 @@ async function create(streamInformation) {
 }
 
 async function update(streamInformation, twitchID) {
+    if (streamInformation.isArray) {
+        streamInformation = streamInformation[0]
+    }
     const rows = await db.query(
-        'UPDATE stream SET twitch_id=$1, game_name=$2, is_live=$3, title=$4, started_at=$5,' +
+        'UPDATE stream SET id=$1, game_name=$2, is_live=$3, title=$4, started_at=$5,' +
         ' viewers=$6, thumbnail=$7 WHERE display_name=$8 RETURNING *',
         [twitchID, streamInformation.game_name,
         streamInformation.is_live, streamInformation.title, streamInformation.started_at, streamInformation.viewers,
@@ -52,10 +60,10 @@ async function update(streamInformation, twitchID) {
     return updateStream
 }
 
-async function updateStreamIsLiveByChannelName(status, channelName) {
+async function updateStreamIsLiveByID(status, id) {
     const rows = await db.query(
-        'UPDATE stream SET is_live=$1 WHERE display_name=$2 RETURNING *',
-        [status, channelName],
+        'UPDATE stream SET is_live=$1 WHERE id=$2 RETURNING *',
+        [status, id],
     );
     const updatedStream = helper.emptyOrRows(rows);
 
@@ -68,7 +76,8 @@ async function updateStreamIsLiveByChannelName(status, channelName) {
 module.exports = {
     create,
     checkIfStreamExistsByChannelName,
-    checkIfStreamExistsByParticipant,
-    updateStreamIsLiveByChannelName,
+    updateStreamIsLiveByID,
+    checkIfStreamExistsByID,
+    updateStreamIsLiveByID,
     update,
 }

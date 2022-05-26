@@ -45,6 +45,7 @@ async function deleteUsersPickems(userID) {
     "DELETE FROM pickems WHERE user_id=$1 RETURNING *",
     [userID]
   );
+
   const deletedPickemsID = helper.emptyOrRows(rows);
 
   if (deletedPickemsID.length <= 0) {

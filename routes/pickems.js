@@ -42,6 +42,7 @@ router.delete(
         .json(await pickems.deleteUsersPickems(req.params.user_id));
     } catch (err) {
       const httpError = createHttpError(500, err);
+
       next(httpError);
     }
   }

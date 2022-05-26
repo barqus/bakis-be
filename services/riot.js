@@ -9,6 +9,8 @@ const rAPI = new riot.RiotAPI(config.riot_key);
 const played_game = require('./played_games')
 const played_team = require('./played_games_team')
 const played_team_player = require('./played_team_player')
+const { BlobServiceClient } = require('@azure/storage-blob');
+
 const getSummonerIDByName = async (summonerName) => {
     const summoner = await rAPI.summoner.getBySummonerName({
         region: riot.PlatformId.EUW1,
@@ -119,12 +121,49 @@ async function updateMatchHistory(participants, startDate) {
                         await played_team_player.create(player).catch((err) => { console.log(err) })
                     }
                 }
+
+                uploadTimelineToBlob(e)
             }
         } catch (error) {
             continue
         }
     }
     await settings.updateMatchHistoryTime(new Date())
+}
+const uploadTimelineToBlob = async (matchID) => {
+    const singleMatchTimeline = await rAPI.matchV5.getMatchTimelineById({
+        cluster: "europe",
+        matchId: matchID,
+    }).catch((err) => { throw "ERR" })
+    var jsonContent = JSON.stringify(singleMatchTimeline);
+
+    const AZURE_STORAGE_CONNECTION_STRING = config.blob_string
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+        AZURE_STORAGE_CONNECTION_STRING
+    );
+
+    if (!AZURE_STORAGE_CONNECTION_STRING) {
+        throw Error("Azure Storage Connection string not found");
+    }
+
+    // Create a unique name for the blob
+    const blobName = singleMatchTimeline.metadata.matchId + ".json";
+
+    const containerClient = blobServiceClient.getContainerClient("fillqblobas");
+    // // Get a block blob client
+    
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+
+    console.log("\nUploading to Azure storage as blob:\n\t", blobName);
+    const blobOptions = {
+        blobHTTPHeaders: { blobContentType: 'application/json' },
+    };
+    const uploadBlobResponse = await blockBlobClient.upload(jsonContent, jsonContent.length, blobOptions);
+    console.log(
+        "Blob was uploaded successfully. requestId: ",
+        uploadBlobResponse.requestId
+    );
 }
 
 module.exports = {

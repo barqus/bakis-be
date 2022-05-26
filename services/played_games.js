@@ -1,8 +1,6 @@
 const db = require('./db');
 const helper = require('../helper');
 
-
-// TODO: on deletion of participant delete games??
 async function checkIfMatchExistsByID(matchID) {
     const rows = await db.query(
         'SELECT EXISTS(SELECT 1 FROM played_games where id=$1)', [matchID],
