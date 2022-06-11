@@ -7,7 +7,7 @@ const config = {
     user: env.DB_USER || 'postgres',
     password: env.DB_PASSWORD || 'postgres',
     database: env.DB_NAME || 'postgres',
-    ssl: true,
+    ssl: env.DB_SSL || false,
   },
   listPerPage: env.LIST_PER_PAGE || 10,
   token_secret: env.TOKEN_SECRET || "secr3t@s",

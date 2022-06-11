@@ -19,6 +19,21 @@ router.get(
   }
 );
 
+router.get(
+  "/points/:user_id",
+  jwtService.authenticateTokenForCurrentUser,
+  async function (req, res, next) {
+    res.set('Cache-Control', 'no-store')
+    try {
+      res.json(await pickems.getUsersPickemsPoints(req.params.user_id));
+    } catch (err) {
+      const httpError = createHttpError(500, err);
+      next(httpError);
+    }
+  }
+);
+
+
 router.post(
   "/:user_id",
   jwtService.authenticateTokenForCurrentUser,

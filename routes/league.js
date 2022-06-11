@@ -16,7 +16,7 @@ router.get('/standings', async function (req, res, next) {
 
 router.get('/history', async function (req, res, next) {
     try {
-        res.json(await league.getMatchHistory());
+        res.json(await league.getMatchHistory(req.query.page));
     } catch (err) {
         const httpError = createHttpError(500, err);
         next(httpError);

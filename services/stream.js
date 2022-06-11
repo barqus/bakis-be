@@ -45,13 +45,15 @@ async function update(streamInformation, twitchID) {
     if (streamInformation.isArray) {
         streamInformation = streamInformation[0]
     }
+
     const rows = await db.query(
-        'UPDATE stream SET id=$1, game_name=$2, is_live=$3, title=$4, started_at=$5,' +
-        ' viewers=$6, thumbnail=$7 WHERE display_name=$8 RETURNING *',
-        [twitchID, streamInformation.game_name,
+        'UPDATE stream SET display_name=$1, game_name=$2, is_live=$3, title=$4, started_at=$5,' +
+        ' viewers=$6, thumbnail=$7 WHERE id=$8 RETURNING *',
+        [streamInformation.display_name, streamInformation.game_name,
         streamInformation.is_live, streamInformation.title, streamInformation.started_at, streamInformation.viewers,
-        streamInformation.thumbnail_url, streamInformation.display_name],
+        streamInformation.thumbnail_url, twitchID],
     );
+
     const updateStream = helper.emptyOrRows(rows);
 
     if (updateStream.length <= 0) {

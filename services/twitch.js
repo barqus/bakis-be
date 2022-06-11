@@ -7,11 +7,15 @@ const stream = require('./stream');
 
 const updateTwitchInformation = async (participants) => {
     participants.forEach(async element => {
-        const twitchChannel = await getTwitchInfoByID(element.twitch_id)
+
+        const twitchChannel = await getTwitchInfoByID(element.twitch_id).catch((e) => {console.log(e)})
+
         if (twitchChannel !== false) {
             let streamInformation = await twitchChannel.getStream()
+ 
             if (streamInformation == null) {
-                channelExists = await stream.checkIfStreamExistsByID(element.twitch_id)
+                channelExists = await stream.checkIfStreamExistsByID(element.twitch_id).catch((e) => {console.log(e)})
+
                 if (channelExists) {
                     await stream.updateStreamIsLiveByID(false, twitchChannel.id)
                     // await stream.update(streamInformationObject, st+reamInformationObject.twitch_id)
@@ -36,7 +40,9 @@ const updateTwitchInformation = async (participants) => {
                     thumbnail_url: streamInformation.thumbnailUrl,
                     participant_id: element.id
                 }
+
                 channelExists = await stream.checkIfStreamExistsByID(streamInformation.userId)
+
                 if (channelExists) {
                     await stream.update(streamInformationObject, streamInformationObject.twitch_id)
                 } else {

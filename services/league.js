@@ -6,18 +6,31 @@ const axios = require('axios');
 
 async function getStandings() {
     const rows = await db.query(
-        'SELECT * FROM participants, summoners, stream WHERE participants.summoner_id = summoners.id and participants.twitch_id = stream.id;',
+        "SELECT * FROM participants, summoners as s, stream WHERE participants.summoner_id = s.id and participants.twitch_id = stream.id "+
+        "ORDER BY array_position(array['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON'], s.tier), "+ 
+        "array_position(array['I', 'II', 'III', 'IV'], s.rank), s.league_points desc, (s.wins/s.losses);",
     );
     const standings = helper.emptyOrRows(rows);
 
     return standings
 }
 
-async function getMatchHistory() {
+async function getMatchHistory(page = 1) {
+    const offset = helper.getOffset(page, 6);
     const rows = await db.query(
-        'SELECT * FROM played_games ORDER BY played_games.game_creation DESC;',
+        'SELECT * FROM played_games ORDER BY played_games.game_creation DESC OFFSET $1 LIMIT $2;',[offset, 6]
     );
     const history = helper.emptyOrRows(rows);
+    console.log(history.length)
+
+    let nextPage = Number(page)+1
+
+    if (history.length < 6) {
+        nextPage = null
+    }
+
+    const meta = {nextPage};
+  
 
     var output = []
 
@@ -47,7 +60,7 @@ async function getMatchHistory() {
         output.push(currentGame)
     }
 
-    return output
+    return {output, meta}
 }
 
 async function getMatchHistoryFromBlob(matchInformationId) {
