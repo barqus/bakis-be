@@ -1,4 +1,5 @@
 // import { RiotAPI, RiotAPITypes, PlatformId } from '@fightmegg/riot-api'
+// TODO: UPDATE API KEY TO PRODUCTIONkk                         
 const riot = require('@fightmegg/riot-api');
 const config = require('../config');
 const db = require('./db');
@@ -15,7 +16,7 @@ const getSummonerIDByName = async (summonerName) => {
     const summoner = await rAPI.summoner.getBySummonerName({
         region: riot.PlatformId.EUW1,
         summonerName: summonerName,
-    }).catch((err) => { throw err });
+    }).catch((err) => { console.log(err); throw err }); 
     return summoner
 }
 
@@ -46,9 +47,10 @@ async function updateMatchHistory(participants, startDate) {
     date = new Date(startDate)
     date.setHours(date.getHours() - 1);
     const startDateInSeconds = Math.floor(new Date(date) / 1000);
-
+    console.log("Started updating match history from ",date )
     for (const element of participants) {
         try {
+            console.log("STARTDATESECONDS:", startDateInSeconds)
             let matchHistory = await rAPI.matchV5.getIdsbyPuuid({
                 cluster: "europe",
                 puuid: element.riot_puuid,
@@ -58,7 +60,7 @@ async function updateMatchHistory(participants, startDate) {
                     startTime: startDateInSeconds
                 }
             }).catch((err) => { console.log(err) })
-
+            console.log("found new matches: ", matchHistory)
             for (const e of matchHistory) {
                 const singleMatchInfo = await rAPI.matchV5.getMatchById({
                     cluster: "europe",
@@ -125,10 +127,13 @@ async function updateMatchHistory(participants, startDate) {
                 uploadTimelineToBlob(e)
             }
         } catch (error) {
+            console.log(error)
             continue
         }
     }
     await settings.updateMatchHistoryTime(new Date())
+    console.log("Finished updating match history")
+
 }
 const uploadTimelineToBlob = async (matchID) => {
     const singleMatchTimeline = await rAPI.matchV5.getMatchTimelineById({
@@ -149,7 +154,7 @@ const uploadTimelineToBlob = async (matchID) => {
     // Create a unique name for the blob
     const blobName = singleMatchTimeline.metadata.matchId + ".json";
 
-    const containerClient = blobServiceClient.getContainerClient("fillqblobas");
+    const containerClient = blobServiceClient.getContainerClient("bakisblob");
     // // Get a block blob client
     
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);

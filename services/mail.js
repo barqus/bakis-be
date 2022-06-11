@@ -5,10 +5,10 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
        auth: {
             user: 'fillq.auto@gmail.com',
-            pass: '9JMFV3ohDS5Ey2',
+            pass: 'lxyuxcgtyltkmuye',
          },
     secure: true,
-    });
-    module.exports = {
-        transporter
-    } 
+});
+module.exports = {
+    transporter
+} 

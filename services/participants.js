@@ -42,12 +42,13 @@ async function getQnA(participantID) {
 }
 
 async function create(participant) {
+    console.log("checkng summoner")
     let summoner_information = await riot.getSummonerIDByName(participant.summoner_name)
-        .catch((err) => { throw "Failed to find summoner by summoner name" })
-
+        .catch((err) => { throw "Nepavyko surasti nurodytos League of Legends paskyros" })
+        console.log("checkng twitch")
     let twitchChannel = await twitch.getTwitchInfoByChannelName(participant.twitch_channel)
     if (twitchChannel === false) {
-        throw "Failed to find twitch account by that channel name"
+        throw "Nepavyko surasti nurodytos Twitch paskyros"
     }
 
     const result = await db.query(

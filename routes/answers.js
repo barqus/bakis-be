@@ -27,6 +27,9 @@ router.post('/', jwtService.authenticateAdminToken,
     async function (req, res, next) {
         try {
             for (const element of req.body) {
+                if (element == null) {
+                    continue
+                }
                 let alreadyExists = await answers.checkIfAnswerExistsByQuestionAndParticipant(element.question_id, element.participant_id)
                 if (alreadyExists.length > 0) {
                     let answerID = alreadyExists[0].id

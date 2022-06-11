@@ -52,7 +52,7 @@ async function getMatchHistory() {
 
 async function getMatchHistoryFromBlob(matchInformationId) {
 
-    return axios.get(`https://bakis.blob.core.windows.net/fillqblobas/${matchInformationId}.json`)
+    return axios.get(`https://bakis.blob.core.windows.net/bakisblob/${matchInformationId}.json`)
     .then(response => {
         return response.data
     })
