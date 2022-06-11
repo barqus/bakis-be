@@ -7,8 +7,8 @@ const axios = require('axios');
 async function getStandings() {
     const rows = await db.query(
         "SELECT * FROM participants, summoners as s, stream WHERE participants.summoner_id = s.id and participants.twitch_id = stream.id "+
-        "ORDER BY array_position(array['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON'], s.tier), "+ 
-        "array_position(array['I', 'II', 'III', 'IV'], s.rank), s.league_points desc, (s.wins/s.losses);",
+        "ORDER BY array_position(array['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON']::varchar[], s.tier), "+ 
+        "array_position(array['I', 'II', 'III', 'IV']::varchar[], s.rank), s.league_points desc, (s.wins/s.losses);",
     );
     const standings = helper.emptyOrRows(rows);
 

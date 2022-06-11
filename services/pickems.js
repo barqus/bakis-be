@@ -29,8 +29,8 @@ async function getUsersPickemsPoints(userID) {
     throw "Users pickems not found";
   }
   const standingsQuery ="SELECT p.id, p.nickname FROM participants as p, summoners as s WHERE p.summoner_id = s.id "+ 
-  "ORDER BY array_position(array['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON'], s.tier), "+ 
-  "array_position(array['I', 'II', 'III', 'IV'], s.rank), s.league_points desc, (s.wins/s.losses);"
+  "ORDER BY array_position(array['CHALLENGER', 'GRANDMASTER', 'MASTER', 'DIAMOND', 'PLATINUM', 'GOLD', 'SILVER', 'BRONZE', 'IRON']::varchar[], s.tier), "+ 
+  "array_position(array['I', 'II', 'III', 'IV']::varchar[], s.rank), s.league_points desc, (s.wins/s.losses);"
 
   const participantsSortedRows = await db.query(
     standingsQuery,
