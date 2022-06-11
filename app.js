@@ -36,7 +36,7 @@ app.use('/pickems', pickemsRouter);
 app.use(errorHandlerMiddleware);
 
 sync.syncParticipantsLeagueStandingsInformation();
-sync.syncMatchHistory();
+sync.syncMatchHistory(); 
 sync.syncTwitchInformation();
 
 module.exports = app;

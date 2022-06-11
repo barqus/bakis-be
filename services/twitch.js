@@ -48,7 +48,9 @@ const updateTwitchInformation = async (participants) => {
 }
 
 async function getTwitchInfoByChannelName(userName) {
+    console.log("CALLED")
     const user = await apiClient.helix.users.getUserByName(userName).catch((err) => { console.log("ERRRR", err) });
+    console.log("FINISHED")
     if (!user) {
         return false;
     }

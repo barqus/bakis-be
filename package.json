@@ -28,6 +28,7 @@
     "install": "^0.13.0",
     "into-stream": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
+    "log-to-file": "^3.0.0",
     "morgan": "~1.9.1",
     "node-cron": "^3.0.0",
     "node-pg-migrate": "^6.2.1",
