@@ -12,8 +12,6 @@ const mailer = require('./mail')
 // const authProvider = new ClientCredentialsAuthProvider(config.twitch_client_id, config.twitch_secret);
 // const apiClient = new ApiClient({ authProvider });
 const superagent = require('superagent');
-
-// Import.
 const log = require('log-to-file');
 
 async function register(user) {
@@ -24,9 +22,6 @@ async function register(user) {
     [user.username, user.email, hashedPassword]
   );
   let message = 'Error in registering';
-  log("HERE", '../mail.log')
-  log(mailer, '../mail.log');
-  log(mailer.transporter, '../mail.log');
   const confirmationCode = jwt.sign({ user_id: result[0].id, user_email: user.email }, config.token_secret);
 
   if (result.length) {
